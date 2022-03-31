@@ -1,7 +1,7 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Heading, Button, Input } from '@pancakeswap-libs/uikit'
-import * as XLSX from 'ts-xlsx';
+import { Heading, Button, Input, useWalletModal } from '@pancakeswap-libs/uikit'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import FlexLayout from 'components/layout/Flex'
 import { useAddClaimList } from '../../hooks/useCryptoRunnerClaim'
 
@@ -17,6 +17,13 @@ interface FileUploadProps {
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEFAULT_MAX_FILE_SIZE_IN_BYTES, updateFileCb, ...props }) => {
+  const { account, connect,reset } = useWallet()
+  useEffect(() => {
+    if (!account && window.localStorage.getItem('accountStatus')) {
+    connect('injected')
+    }
+  }, [account, connect])
+  const { onPresentConnectModal } = useWalletModal(connect, reset)
   const fileInputField = useRef(null)
   const [exceed, setExceed] = useState(false)
   const [file, setFile] = useState({
@@ -54,8 +61,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
 
   const handleUploadBtnClick = () => {
     fileInputField.current.click()
-  }  
-  // let file:File;
+  }
   const handleNewFileUpload = (e) => {
     const _file = e.target.files[0]
     if (_file.size > maxFileSizeInBytes) {
@@ -67,9 +73,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
       })
       return
     }
-    // setExceed(false)
-    // setFile(_file)
-    // updateFileCb(_file);
     let arrayBuffer;
     const fileReader = new FileReader();
     fileReader.onload = (e1) => {
@@ -103,8 +106,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
 
   return (
     <>
-      {/* <FileUploadContainer> */}
-        {/* <DragDropText>Drag and drop your files anywhere or</DragDropText> */}
+      {(account)?(<>
         <UploadFileBtn
           type="button"
           onClick={handleUploadBtnClick}
@@ -124,30 +126,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
           accept=".xlsx, .xls, .csv"
           {...props}
         />
-      {/* </FileUploadContainer> */}
-      {/* <FilePreviewContainer>
-        {file.name && (
-          <>
-            <span>To Upload</span>
-            <PreviewContainer key={file.name}>
-              <div>
-                {file.type.split("/")[0] === "image" && (
-                  <ImagePreview 
-                    src={URL.createObjectURL(file)}
-                    alt={`file preview ${file.name}`}
-                  />
-                )}
-                <FileMetaData>
-                  <span>{file.name}</span>
-                  <aside>
-                    <span>{convertBytesToKB(file.size)} kb</span>
-                  </aside>
-                </FileMetaData>
-              </div>
-            </PreviewContainer>
-          </>
-        )}
-      </FilePreviewContainer> */}
       {(refereeList.length > 0)?(
         <StyledFlexLayout>
           <PreviewList>
@@ -157,8 +135,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
             {previewRefereeList(refereeList)}
           </PreviewList>
           <div>
+            
             <StyledInput type="text" min="0" scale="lg" mb="50px" placeholder='Claim Amount' isSuccess onChange={handleAmountChange}/>
-            <SubmitButton fullWidth onClick={async () => {
+            <SubmitButton fullWidth disabled={(!claimAmount)} onClick={async () => {
               setPendingTx(true)
               handleAdd()
               setPendingTx(false)
@@ -169,10 +148,18 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
       ):(
       <></>
       )}
+      </>):(<ConnectContent><Button size="sm" fullWidth onClick={onPresentConnectModal}>Connect Wallet</Button></ConnectContent>)}
     </>
   )
 }
 
+const ConnectContent = styled.div`
+  margin: auto;
+  text-align: center;
+  & button, div{
+    max-width: 200px;
+  }
+`
 const StyledInput = styled(Input)`
   max-width: 500px;
   text-align: right;
@@ -186,6 +173,8 @@ const PreviewList = styled.div`
 
 const RefereeAddress = styled.div`
   margin-top: 20px;
+  font-family: monospace !important;
+  font-size: x-large;
 `
 
 const StyledFlexLayout = styled(FlexLayout)`
@@ -197,18 +186,6 @@ const SubmitButton = styled(Button)`
   max-width: 200px;
   margin-top: 30px;
   margin-left: 300px;
-`
-
-const FileUploadContainer = styled.section`
-  position: relative;
-  margin: 25px 0 15px;
-  // border: 2px dotted lightgray;
-  padding: 35px 20px;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: transparent;
 `
 
 const FormField = styled.input.attrs({
@@ -231,13 +208,6 @@ const FormField = styled.input.attrs({
   }
 
   display: none;
-`
-
-const DragDropText = styled.p`
-  font-weight: bold;
-  letter-spacing: 2.2px;
-  margin-top: 0;
-  text-align: center;
 `
 
 const UploadFileBtn = styled.button`
@@ -328,14 +298,6 @@ const UploadFileBtn = styled.button`
   }
 `
 
-const FilePreviewContainer = styled.article`
-  margin-bottom: 35px;
-
-  span {
-    font-size: 14px;
-  }
-`
-
 const FileMetaData = styled.div`
   flex-direction: column;
   position: absolute;
@@ -354,47 +316,6 @@ const FileMetaData = styled.div`
     display: flex;
     justify-content: space-between;
   }
-`
-
-const PreviewContainer = styled.section`
-  padding: 0.25rem;
-  width: 20%;
-  height: 120px;
-  border-radius: 6px;
-  box-sizing: border-box;
-  margin: auto;
-
-  &:hover {
-    opacity: 0.55;
-
-    ${FileMetaData} {
-      display: flex;
-    }
-  }
-
-  & > div:first-of-type {
-    height: 100%;
-    position: relative;
-  }
-
-  @media only screen and (max-width: 750px) {
-    width: 25%;
-  }
-
-  @media only screen and (max-width: 500px) {
-    width: 50%;
-  }
-
-  @media only screen and (max-width: 400px) {
-    width: 100%;
-    padding: 0 0 0.4em;
-  }
-`
-
-const ImagePreview = styled.img`
-  border-radius: 6px;
-  width: 100%;
-  height: 100%;
 `
 
 export default FileUpload

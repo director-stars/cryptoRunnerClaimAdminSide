@@ -7,7 +7,8 @@ import {
   addDB,
   getNewTweetedRefereeList,
   addTweetedRefereeList,
-  confirmNewTweetedRefereeList
+  confirmNewTweetedRefereeList,
+  addRewardList
 } from '../utils/cryptoRunnerUtils'
 
 export const useAddClaimList = () => {
@@ -52,16 +53,28 @@ export const useNewTweetedReferee = () => {
 }
 
 export const useAddTweetedRefereeList = () => {
+  const { account } = useWallet();
+  const claimContract = useClaim();
   const handleGetNewTweetedRefereeList = useCallback(
     async (tweetedList) => {
       try {
-        const result = await confirmNewTweetedRefereeList(tweetedList);
-        return result;
+        console.log(tweetedList)
+        const addressList = [];
+        for(let i = 0; i < tweetedList.length; i ++){
+          addressList.push(tweetedList[i].address);
+        }
+        console.log(tweetedList);
+        const result = await addRewardList(addressList, claimContract, account);
+        if(result) {
+          const res = await confirmNewTweetedRefereeList(tweetedList);
+          return res;
+        }
+        return "failed.";
       } catch(e) {
         return e;
       }
     },
-    []
+    [claimContract, account]
   )
   return{onAddTweetedRefereeList: handleGetNewTweetedRefereeList}
 }

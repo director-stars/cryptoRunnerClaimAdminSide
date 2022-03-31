@@ -1104,9 +1104,9 @@
     regenerator-runtime "^0.13.4"
 
 "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.7":
-  version "7.16.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.3.tgz#b86f0db02a04187a3c17caa77de69840165d42d5"
-  integrity sha512-WBwekcqacdY2e9AF/Q7WLFUWmdJGJTkbjqTjoMDgXkVZ3ZRUvOPsLb5KdwISoQVsbP+DQzVZW4Zhci0DvpbNTQ==
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.2.tgz#66f68591605e59da47523c631416b18508779941"
+  integrity sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1837,7 +1837,7 @@
 
 "@pancakeswap-libs/uikit@director-stars/cryptoRunnerClaimUikit":
   version "0.0.1"
-  resolved "git+ssh://git@github.com/director-stars/cryptoRunnerClaimUikit.git#a66f1cc6fddbffe704e83a8982439a6b019b6f16"
+  resolved "git+ssh://git@github.com/director-stars/cryptoRunnerClaimUikit.git#51fe496ed1de051d2545c41ccc41c333428500f0"
   dependencies:
     "@types/lodash" "^4.14.162"
     "@types/styled-system" "^5.1.10"
@@ -2379,9 +2379,9 @@
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
 "@types/lodash@^4.14.162":
-  version "4.14.177"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.177.tgz#f70c0d19c30fab101cad46b52be60363c43c4578"
-  integrity sha512-0fDwydE2clKe9MNfvXHBHF9WEahRuj+msTuQqOmAApNORFvhMYZKNGGJdCzuhheVjMps/ti0Ak/iJPACMaevvw==
+  version "4.14.179"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.179.tgz#490ec3288088c91295780237d2497a3aa9dfb5c5"
+  integrity sha512-uwc1x90yCKqGcIOAT6DwOSuxnrAbpkdPsUOZtwrXb4D/6wZs+6qG7QnIawDuZWg0sWpxl+ltIKCaLoMlna678w==
 
 "@types/minimatch@*":
   version "3.0.3"
@@ -2506,9 +2506,9 @@
     csstype "^3.0.2"
 
 "@types/styled-system@^5.1.10":
-  version "5.1.13"
-  resolved "https://registry.yarnpkg.com/@types/styled-system/-/styled-system-5.1.13.tgz#9ad667534d3bd75720dd7778c94c783449cb5c14"
-  integrity sha512-RtpV6zXnnMQNcxKjC06BUM4MUER5o9uZ6b7xAc2OzhWxSsmQ3jXyW8ohuXdEJRKypEe0EqAzbSGx2Im0NXfdKA==
+  version "5.1.15"
+  resolved "https://registry.yarnpkg.com/@types/styled-system/-/styled-system-5.1.15.tgz#075f969cc028a895dba916c07708e2fe828d7077"
+  integrity sha512-1uls4wipZn8FtYFZ7upRVFDoEeOXTQTs2zuyOZPn02T6rjIxtvj2P2lG5qsxXHhKuKsu3thveCZrtaeLE/ibLg==
   dependencies:
     csstype "^3.0.2"
 
@@ -2544,11 +2544,6 @@
     "@types/uglify-js" "*"
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
-
-"@types/xlsx@0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@types/xlsx/-/xlsx-0.0.34.tgz#2b49e60dcbd3553a6bf211a3af1a6f4c7cb2c8b9"
-  integrity sha1-K0nmDcvTVTpr8hGjrxpvTHyyyLk=
 
 "@types/yargs-parser@*":
   version "20.2.0"
@@ -5701,9 +5696,9 @@ cssstyle@^2.2.0:
     cssom "~0.3.6"
 
 csstype@^3.0.2:
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.10.tgz#2ad3a7bed70f35b965707c092e5f30b327c290e5"
-  integrity sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA==
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
+  integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -12351,7 +12346,7 @@ prompts@2.4.0, prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.6.1, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -12359,6 +12354,15 @@ prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.8.1"
+
+prop-types@^15.6.2:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
 
 proxy-addr@~2.0.5:
   version "2.0.6"
@@ -14842,13 +14846,6 @@ ts-pnp@1.2.0, ts-pnp@^1.1.6:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ts-pnp/-/ts-pnp-1.2.0.tgz#a500ad084b0798f1c3071af391e65912c86bca92"
   integrity sha512-csd+vJOb/gkzvcCHgTGSChYpy5f1/XKNsmvBGO4JXS+z1v2HobugDz4s1IeFXM3wZB44uczs+eazB5Q/ccdhQw==
-
-ts-xlsx@^0.0.11:
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/ts-xlsx/-/ts-xlsx-0.0.11.tgz#5a5fbcdd0f59d558c287af4c74fd5ea9a4bbeb39"
-  integrity sha1-Wl+83Q9Z1VjCh69MdP1eqaS76zk=
-  dependencies:
-    "@types/xlsx" "0.0.34"
 
 tsconfig-paths@^3.9.0:
   version "3.9.0"

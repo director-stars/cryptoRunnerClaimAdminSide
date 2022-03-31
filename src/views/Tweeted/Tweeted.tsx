@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Heading, Input, Button } from '@pancakeswap-libs/uikit'
+import { Heading, Button, useWalletModal } from '@pancakeswap-libs/uikit'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Page from 'components/layout/Page'
 import PageContent from 'components/layout/PageContent'
 import { useNewTweetedReferee, useAddTweetedRefereeList } from 'hooks/useCryptoRunnerClaim'
-import FlexLayout from 'components/layout/Flex'
 
 const Hero = styled.div`
   // background: linear-gradient(90deg, rgba(255, 0, 0, 0), rgb(214, 51, 65) 45%, rgba(255, 0, 0, 0));
@@ -39,11 +39,6 @@ const PreviewList = styled.div`
   border-radius: 10px;
 `
 
-const StyledInput = styled(Input)`
-  max-width: 500px;
-  text-align: right;
-`
-
 const SubmitButton = styled(Button)`
   max-width: 300px;
   margin-top: 30px;
@@ -51,9 +46,19 @@ const SubmitButton = styled(Button)`
 
 const RefereeAddress = styled.div`
   margin-top: 20px;
+  font-family: monospace !important;
+  font-size: x-large;
 `
 
 const Home: React.FC = () => {
+  
+  const { account, connect,reset } = useWallet()
+  useEffect(() => {
+    if (!account && window.localStorage.getItem('accountStatus')) {
+    connect('injected')
+    }
+  }, [account, connect])
+  const { onPresentConnectModal } = useWalletModal(connect, reset)
 
   const { onAddTweetedRefereeList } = useAddTweetedRefereeList()
   const[pendingTx, setPendingTx] = useState(false)
@@ -61,6 +66,7 @@ const Home: React.FC = () => {
 
   const handleAdd = useCallback(async () => {
     try {
+      console.log('handleAdd')
       const txHash = await onAddTweetedRefereeList(tweetedReferees)
       // user rejected tx or didn't go thru
     } catch (e) {
@@ -70,11 +76,11 @@ const Home: React.FC = () => {
 
   const previewRefereeList = useCallback(
     (refereeListToDisplay, ) => {
-      return tweetedReferees.map((referee) =>(
-        <RefereeAddress>{referee}</RefereeAddress>
+      return refereeListToDisplay.map((referee) =>(
+        <RefereeAddress>{referee.address}</RefereeAddress>
       ))
     },
-    [tweetedReferees],
+    [],
   )
 
   return (
@@ -95,13 +101,13 @@ const Home: React.FC = () => {
             {previewRefereeList(tweetedReferees)}
           </PreviewList>
           <div>
-            {/* <StyledInput type="text" min="0" scale="lg" mb="50px" placeholder='Claim Amount' isSuccess onChange={handleAmountChange}/> */}
-            <SubmitButton fullWidth onClick={async () => {
+            {(account)?(<>
+            <SubmitButton fullWidth disabled={pendingTx || tweetedReferees.length === 0} onClick={async () => {
               setPendingTx(true)
-              handleAdd()
+              await handleAdd()
               setPendingTx(false)
             }}>{pendingTx ? 'Confirming' : 'Confirm Referees'}
-            </SubmitButton>
+            </SubmitButton></>):((<SubmitButton size="sm" disabled={(!tweetedReferees.length)} fullWidth onClick={onPresentConnectModal}>Connect Wallet</SubmitButton>))}
           </div>
         </StyledFlexLayout>
       </PageContent>

@@ -32,10 +32,21 @@ export const addDB = async (list) => {
 }
 
 export const addClaimList = async (list, amount, claimContract, account) => {
-  console.log('addClaimList')
-  console.log(claimContract);
+  // console.log('addClaimList')
+  // console.log(list);
   try {
     return claimContract.methods.addClaimUsers(list, Web3.utils.toWei(amount, "wei")).send({from: account}).on('transactionHash', (tx) => {
+      return tx.transactionHash
+    });
+  } catch (err) {
+    console.log(err)
+    return console.error('err')
+  }
+}
+
+export const addRewardList = async(list, claimContract, account) => {
+  try {
+    return claimContract.methods.addRewardUsers(list).send({from: account}).on('transactionHash', (tx) => {
       return tx.transactionHash
     });
   } catch (err) {
@@ -62,11 +73,6 @@ export const getNewTweetedRefereeList = async () => {
       body: JSON.stringify({})
   });
   const response = await res.json();
-  // let result = false;
-  // if(response){
-  //   result = true;
-  // }
-  // return result;
   return response;
 }
 
@@ -82,7 +88,7 @@ export const confirmNewTweetedRefereeList = async (list) => {
 
   headers.append('GET', 'POST', 'OPTIONS');
 
-  const res = await fetch(`${API_URL}/api/addList`, {
+  const res = await fetch(`${API_URL}/api/setRewardReferee`, {
       method: "POST",
       headers,
       body: JSON.stringify({
