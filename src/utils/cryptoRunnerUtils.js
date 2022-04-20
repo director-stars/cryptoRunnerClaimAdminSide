@@ -65,7 +65,7 @@ export const getNewTweetedRefereeList = async () => {
   headers.append('Access-Control-Allow-Credentials', 'true');
   headers.append('Access-Control-Allow-Headers', '*');
 
-  headers.append('GET', 'POST', 'OPTIONS');
+  headers.append('GET', 'POST');
 
   const res = await fetch(`${API_URL}/api/getTweetedReferee`, {
       method: "POST",
@@ -114,4 +114,13 @@ export const addTweetedRefereeList = async (list, amount, claimContract, account
     console.log(err)
     return console.error('err')
   }
+}
+
+export const getPermission = async (claimContract, account) => {
+  const owner = await claimContract.methods.owner().call();
+  const dev = await claimContract.methods.dev().call();
+  if(account === owner || account === dev){
+    return true;
+  }
+  return false;
 }

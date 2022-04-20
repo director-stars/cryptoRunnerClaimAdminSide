@@ -5,6 +5,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Page from 'components/layout/Page'
 import PageContent from 'components/layout/PageContent'
 import { useNewTweetedReferee, useAddTweetedRefereeList } from 'hooks/useCryptoRunnerClaim'
+import RefereeAddress from './components/RefereeAddress'
 
 const Hero = styled.div`
   // background: linear-gradient(90deg, rgba(255, 0, 0, 0), rgb(214, 51, 65) 45%, rgba(255, 0, 0, 0));
@@ -44,12 +45,6 @@ const SubmitButton = styled(Button)`
   margin-top: 30px;
 `
 
-const RefereeAddress = styled.div`
-  margin-top: 20px;
-  font-family: monospace !important;
-  font-size: x-large;
-`
-
 const Home: React.FC = () => {
   
   const { account, connect,reset } = useWallet()
@@ -63,24 +58,32 @@ const Home: React.FC = () => {
   const { onAddTweetedRefereeList } = useAddTweetedRefereeList()
   const[pendingTx, setPendingTx] = useState(false)
   const tweetedReferees = useNewTweetedReferee();
+  const [rewardStatus, setRewardStatus] = useState([]);
 
   const handleAdd = useCallback(async () => {
     try {
       console.log('handleAdd')
-      const txHash = await onAddTweetedRefereeList(tweetedReferees)
+      const addressList = [];
+      for(let i = 0; i < tweetedReferees.length; i ++){
+        if(!rewardStatus[i]){
+          addressList.push(tweetedReferees[i]);
+        }
+      }
+
+      const txHash = await onAddTweetedRefereeList(addressList)
       // user rejected tx or didn't go thru
     } catch (e) {
       console.error(e)
     }
-  }, [onAddTweetedRefereeList, tweetedReferees])
-
+  },[rewardStatus, tweetedReferees, onAddTweetedRefereeList]);
+  
   const previewRefereeList = useCallback(
     (refereeListToDisplay, ) => {
-      return refereeListToDisplay.map((referee) =>(
-        <RefereeAddress>{referee.address}</RefereeAddress>
+      return refereeListToDisplay.map((referee, index) =>(
+        <RefereeAddress address={referee.address} index={index} rewardStatus={rewardStatus} setRewardStatus={setRewardStatus} />
       ))
     },
-    [],
+    [rewardStatus],
   )
 
   return (

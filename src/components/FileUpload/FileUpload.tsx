@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Heading, Button, Input, useWalletModal } from '@pancakeswap-libs/uikit'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import FlexLayout from 'components/layout/Flex'
-import { useAddClaimList } from '../../hooks/useCryptoRunnerClaim'
+import { useAddClaimList, useGetPermission } from '../../hooks/useCryptoRunnerClaim'
 
 const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 1024 * 1024 * 10;
 const KILO_BYTES_PER_BYTE = 1024;
@@ -36,6 +36,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
   const [refereeList, setRefereeList] = useState([])
   const [claimAmount, setClaimAmount] = useState(0)
   const { onAddList } = useAddClaimList()
+  const permission = useGetPermission();
 
   const handleAdd = useCallback(async () => {
     try {
@@ -137,7 +138,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
           <div>
             
             <StyledInput type="text" min="0" scale="lg" mb="50px" placeholder='Claim Amount' isSuccess onChange={handleAmountChange}/>
-            <SubmitButton fullWidth disabled={(!claimAmount)} onClick={async () => {
+            <SubmitButton fullWidth disabled={(!claimAmount || !permission)} onClick={async () => {
               setPendingTx(true)
               handleAdd()
               setPendingTx(false)

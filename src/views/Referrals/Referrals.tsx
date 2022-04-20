@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Heading, Text } from '@pancakeswap-libs/uikit'
+import { Heading } from '@pancakeswap-libs/uikit'
 import Page from 'components/layout/Page'
 import PageContent from 'components/layout/PageContent'
-// import { useGetTotalShibaSupply, useGetTotalStoneSupply, useGetBnbBalance, useShibaNFTBalance, useGetShibaPrice, useTokenBalance, useGetStonePrice } from 'hooks/useDogesLand'
-import FlexLayout from 'components/layout/Flex'
 import FileUpload from 'components/FileUpload'
 
 const Hero = styled.div`
@@ -34,12 +32,6 @@ const StyledHead = styled.div`
 `
 const StyledHeading = styled(Heading)`
   font-size: 4.5rem;
-`
-const Styledspan = styled.span`
-  color: #000;
-`
-const StyledText = styled(Text)`
-  font-size: 1.5rem;
 `
 
 const Home: React.FC = () => {

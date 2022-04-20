@@ -8,7 +8,8 @@ import {
   getNewTweetedRefereeList,
   addTweetedRefereeList,
   confirmNewTweetedRefereeList,
-  addRewardList
+  addRewardList,
+  getPermission
 } from '../utils/cryptoRunnerUtils'
 
 export const useAddClaimList = () => {
@@ -58,12 +59,10 @@ export const useAddTweetedRefereeList = () => {
   const handleGetNewTweetedRefereeList = useCallback(
     async (tweetedList) => {
       try {
-        console.log(tweetedList)
         const addressList = [];
         for(let i = 0; i < tweetedList.length; i ++){
           addressList.push(tweetedList[i].address);
         }
-        console.log(tweetedList);
         const result = await addRewardList(addressList, claimContract, account);
         if(result) {
           const res = await confirmNewTweetedRefereeList(tweetedList);
@@ -77,4 +76,20 @@ export const useAddTweetedRefereeList = () => {
     [claimContract, account]
   )
   return{onAddTweetedRefereeList: handleGetNewTweetedRefereeList}
+}
+
+export const useGetPermission = () => {
+  const { account } = useWallet();
+  const claimContract = useClaim();
+  const [permission, setPermission] = useState(false)
+  const { fastRefresh } = useRefresh()
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const result = await getPermission(claimContract, account)
+      setPermission(result)
+    }
+    fetchBalance()
+  }, [fastRefresh, claimContract, account])
+
+  return permission
 }
