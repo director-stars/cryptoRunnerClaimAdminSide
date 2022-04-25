@@ -85,7 +85,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ label, maxFileSizeInBytes = DEF
         const result = bstr.toString().replace(/\r\n/g,'\n').split('\n');
         const list = [];
         let index = 0;
-        for(let i = 1; i < result.length; i ++){
+        for(let i = 0; i < result.length; i ++){
           if(result[i] !== "" && result[i].length === 42 && result[i].startsWith("0x")){
             list[index] = result[i];
             index ++;
