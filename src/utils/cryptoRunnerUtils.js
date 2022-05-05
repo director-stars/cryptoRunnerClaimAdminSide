@@ -104,8 +104,6 @@ export const confirmNewTweetedRefereeList = async (list) => {
 }
 
 export const addTweetedRefereeList = async (list, amount, claimContract, account) => {
-  console.log('addClaimList')
-  console.log(claimContract);
   try {
     return claimContract.methods.addClaimUsers(list, Web3.utils.toWei(amount, "wei")).send({from: account}).on('transactionHash', (tx) => {
       return tx.transactionHash

@@ -4,7 +4,7 @@ import { Heading, Button, useWalletModal } from '@pancakeswap-libs/uikit'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Page from 'components/layout/Page'
 import PageContent from 'components/layout/PageContent'
-import { useNewTweetedReferee, useAddTweetedRefereeList } from 'hooks/useCryptoRunnerClaim'
+import { useNewTweetedReferee, useAddTweetedRefereeList, useGetPermission } from 'hooks/useCryptoRunnerClaim'
 import RefereeAddress from './components/RefereeAddress'
 
 const Hero = styled.div`
@@ -38,6 +38,9 @@ const PreviewList = styled.div`
   background-color: #fff;
   padding: 30px;
   border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 `
 
 const SubmitButton = styled(Button)`
@@ -45,6 +48,13 @@ const SubmitButton = styled(Button)`
   margin-top: 30px;
 `
 
+const StyledLayout = styled.div`
+
+`
+
+const StyledDiv = styled.div`
+  text-align:right;
+`
 const Home: React.FC = () => {
   
   const { account, connect,reset } = useWallet()
@@ -58,14 +68,15 @@ const Home: React.FC = () => {
   const { onAddTweetedRefereeList } = useAddTweetedRefereeList()
   const[pendingTx, setPendingTx] = useState(false)
   const tweetedReferees = useNewTweetedReferee();
-  const [rewardStatus, setRewardStatus] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState([]);
+  const permission = useGetPermission();
 
   const handleAdd = useCallback(async () => {
     try {
       console.log('handleAdd')
       const addressList = [];
       for(let i = 0; i < tweetedReferees.length; i ++){
-        if(!rewardStatus[i]){
+        if(!selectedStatus[i]){
           addressList.push(tweetedReferees[i]);
         }
       }
@@ -75,15 +86,36 @@ const Home: React.FC = () => {
     } catch (e) {
       console.error(e)
     }
-  },[rewardStatus, tweetedReferees, onAddTweetedRefereeList]);
+  },[selectedStatus, tweetedReferees, onAddTweetedRefereeList]);
   
-  const previewRefereeList = useCallback(
+  const previewRewardedTweetedList = useCallback(
     (refereeListToDisplay, ) => {
-      return refereeListToDisplay.map((referee, index) =>(
-        <RefereeAddress address={referee.address} index={index} rewardStatus={rewardStatus} setRewardStatus={setRewardStatus} />
-      ))
+      let index = -1;
+      return refereeListToDisplay.map((referee, ) =>{
+        index ++;
+        if(referee.is_rewarded)
+          return (
+              <RefereeAddress address={referee.address} index={index} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} isRewarded={referee.is_rewarded}/>
+          )
+        return <></>;
+      })
     },
-    [rewardStatus],
+    [selectedStatus],
+  )
+
+  const previewNewTweetedList = useCallback(
+    (refereeListToDisplay, ) => {
+      let index = -1;
+      return refereeListToDisplay.map((referee, ) =>{
+        index ++;
+        if(referee.is_rewarded)
+          return <></>;
+        return (
+            <RefereeAddress address={referee.address} index={index} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} isRewarded={referee.is_rewarded}/>
+        )
+      })
+    },
+    [selectedStatus],
   )
 
   return (
@@ -96,23 +128,35 @@ const Home: React.FC = () => {
         </StyledHead>
       </Hero>
       <PageContent>
-        <StyledFlexLayout>
+        {permission?(
+          <StyledFlexLayout>
+          <Heading as="h3" size="lg" mb="24px" color="primary">
+            Preview tweeted list  ({tweetedReferees.length}).
+          </Heading>
           <PreviewList>
-            <Heading as="h3" size="lg" mb="24px" color="primary">
-              Preview new tweeted list  ({tweetedReferees.length}).
-            </Heading>
-            {previewRefereeList(tweetedReferees)}
+            
+            <StyledLayout>
+              <div>Already rewarded and tweeted again.</div>
+              {previewRewardedTweetedList(tweetedReferees)}
+            </StyledLayout>
+            <StyledLayout>
+              <div>New tweeted address list</div>
+              {previewNewTweetedList(tweetedReferees)}
+            </StyledLayout>
           </PreviewList>
-          <div>
+          <StyledDiv>
             {(account)?(<>
-            <SubmitButton fullWidth disabled={pendingTx || tweetedReferees.length === 0} onClick={async () => {
+            <SubmitButton fullWidth disabled={pendingTx || tweetedReferees.length === 0 || !permission} onClick={async () => {
               setPendingTx(true)
               await handleAdd()
               setPendingTx(false)
             }}>{pendingTx ? 'Confirming' : 'Confirm Referees'}
             </SubmitButton></>):((<SubmitButton size="sm" disabled={(!tweetedReferees.length)} fullWidth onClick={onPresentConnectModal}>Connect Wallet</SubmitButton>))}
-          </div>
+          </StyledDiv>
         </StyledFlexLayout>
+        ):(
+          <></>
+        )}
       </PageContent>
     </Page>
   )

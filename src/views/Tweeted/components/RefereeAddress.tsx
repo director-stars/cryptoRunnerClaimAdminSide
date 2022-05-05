@@ -5,8 +5,9 @@ import { Checkbox } from '@pancakeswap-libs/uikit'
 interface RefereeAddressProps {
   address: string,
   index: number,
-  rewardStatus: boolean[],
-  setRewardStatus: any
+  selectedStatus: boolean[],
+  setSelectedStatus: any,
+  isRewarded: boolean
 }
 
 const AddressItem = styled.div`
@@ -20,17 +21,17 @@ const AddressItem = styled.div`
   }
 `
 
-const RefereeAddress: React.FC<RefereeAddressProps> = ({ address, index, rewardStatus, setRewardStatus }) => {
-  const [status, setStatus] = useState(rewardStatus[index]?rewardStatus[index]:false);
+const RefereeAddress: React.FC<RefereeAddressProps> = ({ address, index, selectedStatus, setSelectedStatus, isRewarded }) => {
+  const [status, setStatus] = useState(selectedStatus[index]?selectedStatus[index]:isRewarded);
   const toggle = useCallback(() => {
     setStatus(!status)
   },[status]);
 
   useEffect(() => {
-    const temp = rewardStatus;
+    const temp = selectedStatus;
       temp[index] = status;
-      setRewardStatus(temp);
-  }, [status, rewardStatus, setRewardStatus, index])
+      setSelectedStatus(temp);
+  }, [status, selectedStatus, setSelectedStatus, index])
 
   return (
     <AddressItem>
